@@ -1,0 +1,513 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asaduzzaman Asad — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <style>
+    :root {
+      --bg: #05060c;
+      --surface: #0c0f1e;
+      --card: #111529;
+      --stroke: rgba(255,255,255,0.08);
+      --muted: #c6d0e2;
+      --text: #f4f6fb;
+      --accent: #f5c044;
+      --accent-2: #52f2c0;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+    }
+    .water-react {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+      mix-blend-mode: screen;
+    }
+    .ripple {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(120,186,255,0.14), rgba(255,255,255,0.06), rgba(255,255,255,0));
+      opacity: 0.18;
+      filter: blur(2px);
+      animation: ripple 1.8s ease-out forwards;
+    }
+    @keyframes ripple {
+      from { transform: translate(-50%, -50%) scale(0.2); opacity: 0.5; }
+      to { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+    }
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 22px 64px;
+      position: relative;
+      z-index: 1;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(5,6,12,0.8);
+      border-bottom: 1px solid var(--stroke);
+    }
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+    .brand-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+    }
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--stroke);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s;
+    }
+    .btn-primary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--stroke);
+      color: var(--text);
+      box-shadow: none;
+    }
+    .btn-primary:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px) scale(1.01); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border-color: var(--stroke);
+    }
+    .grid { display: grid; gap: 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 30% 30%, rgba(120,186,255,0.12), transparent 35%),
+                  radial-gradient(circle at 70% 60%, rgba(120,186,255,0.08), transparent 45%);
+      opacity: 0.6;
+      mix-blend-mode: screen;
+      animation: waterShift 10s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Playfair Display", "Space Grotesk", serif;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      margin: 0 0 12px;
+    }
+    .section-title::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+    }
+    .muted { color: var(--muted); }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 320px) 1fr;
+      gap: 20px;
+      align-items: start;
+      padding-top: 34px;
+    }
+    .sidebar {
+      position: sticky;
+      top: 92px;
+      align-self: start;
+    }
+    .content { display: grid; gap: 18px; }
+    .stack { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .stat {
+      padding: 12px 14px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat strong { display: block; font-size: 18px; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    .stat::after {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(circle at 50% 50%, rgba(120,186,255,0.12), transparent 45%);
+      opacity: 0.6;
+      mix-blend-mode: screen;
+      animation: waterShift 14s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .experience-list li,
+    .skills-list li,
+    .interest-list li { margin-bottom: 8px; color: var(--muted); }
+    .experience-list { padding-left: 18px; }
+    .skills-grid,
+    .education-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .education-item h3 { margin: 0 0 4px; }
+    .education-item p { margin: 0 0 6px; color: var(--muted); }
+    @keyframes waterShift {
+      from { transform: translate3d(-6px, -8px, 0) scale(1.02); }
+      to { transform: translate3d(10px, 12px, 0) scale(1.06); }
+    }
+    #about, #services, #experience, #education, #interests, #contact { scroll-margin-top: 90px; }
+    .cta {
+      padding: 22px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--stroke);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta .btn-primary { box-shadow: none; }
+    .cta::after {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at 40% 40%, rgba(120,186,255,0.14), transparent 40%),
+                  radial-gradient(circle at 70% 70%, rgba(120,186,255,0.09), transparent 50%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      animation: waterShift 12s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    footer {
+      padding: 18px 0 36px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+    .menu-toggle { display: none; }
+    .portrait {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, rgba(245,192,68,0.2), rgba(82,242,192,0.18));
+      box-shadow: var(--shadow);
+      margin: 22px auto 0;
+      justify-self: center;
+      align-self: end;
+    }
+    .portrait img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 60%;
+      filter: saturate(1.02);
+    }
+    .name { margin: 12px 0 2px; font-family: "Playfair Display", "Space Grotesk", serif; font-size: 28px; letter-spacing: -0.01em; }
+    .role { color: var(--muted); font-weight: 700; margin: 0 0 10px; }
+    .contact-lines { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+    .contact-lines a { color: var(--text); text-decoration: none; }
+    .contact-lines a:hover { text-decoration: underline; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 14px; }
+    .divider { height: 1px; background: var(--stroke); margin: 12px 0; border: none; }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      main { padding: 20px 18px 56px; }
+      nav { padding: 12px 16px; }
+      .section-title { font-size: 20px; }
+      .card, .stat { padding: 16px; }
+      .name { font-size: 24px; }
+    }
+    @media (max-width: 840px) {
+      .nav-links { display: none; }
+      .menu-toggle { display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
+      .nav-open .nav-links {
+        display: flex; flex-direction: column; align-items: flex-start;
+        position: absolute; top: 64px; right: 24px; background: #0a0c15; padding: 12px; border: 1px solid var(--stroke); border-radius: 14px;
+      }
+      main { padding-top: 18px; }
+      .layout { padding-top: 22px; }
+    }
+    @media (max-width: 640px) {
+      .btn, .pill, .chip { font-size: 12px; padding: 10px 14px; }
+      .card { padding: 14px; }
+      .section-title { font-size: 18px; }
+      .contact-lines { font-size: 13px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .education-grid { grid-template-columns: 1fr; }
+      .portrait { width: 160px; height: 160px; margin-top: 10px; }
+      .name { font-size: 22px; }
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    section { animation: fadeUp 0.6s ease forwards; opacity: 0; }
+    section:nth-of-type(1) { animation-delay: 0.05s; }
+    section:nth-of-type(2) { animation-delay: 0.12s; }
+    section:nth-of-type(3) { animation-delay: 0.18s; }
+    section:nth-of-type(4) { animation-delay: 0.24s; }
+    section:nth-of-type(5) { animation-delay: 0.3s; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+  <body>
+  <div id="water-root" class="water-react"></div>
+  <header>
+    <nav>
+      <div class="brand"><span class="brand-dot"></span> Asaduzzaman Asad</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#services">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn-ghost" href="mailto:asad.armada@gmail.com">Email</a>
+      </div>
+      <button class="menu-toggle btn btn-ghost" type="button">Menu</button>
+    </nav>
+  </header>
+
+  <main>
+  <div class="layout">
+    <aside class="sidebar card">
+      <div class="portrait">
+        <img src="profile.jpeg" alt="Profile photo of Asaduzzaman Asad">
+      </div>
+      <span class="pill" style="margin-top:14px;">Junior Executive</span>
+      <h1 class="name">Asaduzzaman Asad</h1>
+      <p class="role">Web administration · Marketplace ops · Customer support</p>
+      <p class="muted">IT specialist who keeps websites, marketplaces, and customer experiences running smoothly with fast fixes and clear communication.</p>
+      <div class="stack" style="margin: 12px 0;">
+        <span class="chip">Uttara, Dhaka</span>
+        <span class="chip">Website admin</span>
+        <span class="chip">Marketplace ops</span>
+      </div>
+      <div class="contact-lines">
+        <a href="mailto:asad.armada@gmail.com">asad.armada@gmail.com</a>
+        <a href="tel:+8801821213778">+8801821-213778</a>
+        <span>Fariduddin Tower, 53/36 Middle Azampur</span>
+        <span>Dakshinkhan, Dhaka-1230</span>
+      </div>
+      <div class="stack" style="margin: 16px 0 10px;">
+        <a class="btn btn-primary" href="mailto:asad.armada@gmail.com">Email</a>
+        <a class="btn btn-ghost" href="tel:+8801821213778">Call</a>
+      </div>
+      <hr class="divider">
+        <div class="stats-grid">
+          <div class="stat"><strong>3.77 CGPA</strong><span>BSc in CSE, 2025 · Uttara University</span></div>
+          <div class="stat"><strong>3.54 CGPA</strong><span>Diploma in Computer Technology, 2020</span></div>
+          <div class="stat"><strong>Present</strong><span>Junior Executive, ARMADA</span></div>
+      </div>
+    </aside>
+
+    <div class="content">
+      <section class="card" id="about">
+        <h2 class="section-title">About</h2>
+        <p class="muted">Results-driven IT professional working across website administration, lightweight coding, and marketplace management. I diagnose issues quickly, refine flows, and keep digital operations steady for teams and customers.</p>
+      </section>
+
+      <section class="card" id="services">
+        <h2 class="section-title">Skills & Focus</h2>
+        <ul class="skills-list" style="list-style: disc; padding-left: 18px; margin: 0;">
+          <li>Website administration: content/product updates, admin panels, and stability checks.</li>
+          <li>Marketplace ops: monitoring listings, orders, and keeping data accurate.</li>
+          <li>Customer support: answering queries, fixing small bugs, and closing the loop clearly.</li>
+          <li>Light coding: small fixes and tweaks to keep flows working.</li>
+        </ul>
+        <div class="stack" style="margin-top: 14px;">
+          <span class="chip">Web Design</span>
+          <span class="chip">Web Development</span>
+          <span class="chip">Digital Marketing</span>
+          <span class="chip">Video Editing</span>
+          <span class="chip">Graphics Design</span>
+          <span class="chip">App Development</span>
+        </div>
+      </section>
+
+      <section class="card" id="experience">
+        <h2 class="section-title">Experience</h2>
+          <h3 style="margin: 4px 0 4px;">Junior Executive — ARMADA</h3>
+        <p class="muted">Sep 2021 — Present | Uttara, Dhaka-1230</p>
+        <ul class="experience-list">
+          <li>Manage and update company websites through the admin panel.</li>
+          <li>Ship small code changes and fix bugs to keep flows running.</li>
+          <li>Monitor the online marketplace, listings, and order activity.</li>
+          <li>Handle customer queries with clear, fast solutions.</li>
+        </ul>
+      </section>
+
+      <section class="card" id="education">
+        <h2 class="section-title">Education</h2>
+        <div class="education-grid">
+            <div class="education-item stat">
+              <h3>Uttara University</h3>
+              <p class="muted">BSc in CSE | Passing Year: 2025</p>
+              <strong>CGPA: 3.77 / 4.00</strong>
+          </div>
+          <div class="education-item stat">
+            <h3>Habiganj Polytechnic Institute</h3>
+            <p class="muted">Diploma in Computer Technology | Passing Year: 2020</p>
+            <strong>CGPA: 3.54 / 4.00</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="interests">
+        <h2 class="section-title">Interests</h2>
+        <ul class="interest-list" style="list-style: disc; padding-left: 18px; margin: 0;">
+          <li>Digital exploration and learning</li>
+          <li>Experimenting and innovating</li>
+          <li>Reading and self-growth</li>
+          <li>Travelling</li>
+          <li>Collecting unique items</li>
+          <li>Creating basic mobile apps</li>
+        </ul>
+      </section>
+
+      <section class="cta" id="contact">
+        <h2>Let's work together.</h2>
+        <p>Need dependable web administration, light coding fixes, or marketplace support? Reach out and I will respond quickly.</p>
+        <div class="stack" style="margin-top: 10px;">
+          <a class="btn btn-primary" href="mailto:asad.armada@gmail.com">asad.armada@gmail.com</a>
+          <a class="btn btn-ghost" href="tel:+8801821213778">+8801821-213778</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+  <footer>Portfolio of Asaduzzaman Asad — web administration, customization, and digital ops.</footer>
+
+    <script>
+      const toggle = document.querySelector(".menu-toggle");
+      const header = document.querySelector("header");
+      toggle?.addEventListener("click", () => header.classList.toggle("nav-open"));
+    </script>
+    <script>
+      const { useEffect, useState } = React;
+
+      function WaterRipples() {
+        const [ripples, setRipples] = useState([]);
+
+        useEffect(() => {
+          let id = 0;
+          const handleMove = (e) => {
+            const nextId = id++;
+            const { clientX: x, clientY: y } = e;
+            setRipples((prev) => [...prev, { id: nextId, x, y }]);
+            setTimeout(() => {
+              setRipples((prev) => prev.filter((r) => r.id !== nextId));
+            }, 1700);
+          };
+          window.addEventListener("pointermove", handleMove);
+          return () => window.removeEventListener("pointermove", handleMove);
+        }, []);
+
+        return React.createElement(
+          "div",
+          { className: "water-react" },
+          ripples.map((r) =>
+            React.createElement("div", {
+              key: r.id,
+              className: "ripple",
+              style: { left: `${r.x}px`, top: `${r.y}px` },
+            })
+          )
+        );
+      }
+
+      const waterRoot = document.getElementById("water-root");
+      if (waterRoot) {
+        const root = ReactDOM.createRoot(waterRoot);
+        root.render(React.createElement(WaterRipples));
+      }
+    </script>
+  </body>
+  </html>
+
+
+
